@@ -1,115 +1,116 @@
 var skills
 if (localStorage.getItem('skills')) {
     skills = JSON.parse(localStorage.getItem('skills'))
+    console.log(skills)
 } else {
     var skills = [{
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'Meditation',
+        startingStreakMultiplier: 2,
+        streakAdditive: 0.05,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 1,
+        startingXP: 20
     }, {
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'Japanese',
+        startingStreakMultiplier: 1.25,
+        streakAdditive: 0.015,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 0.6,
+        startingXP: 70
     }, {
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'French',
+        startingStreakMultiplier: 1.2,
+        streakAdditive: 0.01,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 0.4,
+        startingXP: 60
     }, {
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'Coding',
+        startingStreakMultiplier: 1.4,
+        streakAdditive: 0.02,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 0.6,
+        startingXP: 80
     }, {
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'Study',
+        startingStreakMultiplier: 1.35,
+        streakAdditive: 0.015,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 0.4,
+        startingXP: 80
     }, {
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'Work',
+        startingStreakMultiplier: 1.5,
+        streakAdditive: 0.01,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 0.5,
+        startingXP: 100
     }, {
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'Working out',
+        startingStreakMultiplier: 1.5,
+        streakAdditive: 0.015,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 0.75,
+        startingXP: 40
     }, {
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'Sleeping',
+        startingStreakMultiplier: 1.5,
+        streakAdditive: 0.02,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 1,
+        startingXP: 60
     }, {
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'Chores',
+        startingStreakMultiplier: 1.25,
+        streakAdditive: 0.01,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 0.25,
+        startingXP: 30
     }, {
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'Science',
+        startingStreakMultiplier: 1.25,
+        streakAdditive: 0.02,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 0.35,
+        startingXP: 30
     }, {
-        name: '',
-        startingStreakMultiplier: '',
-        streakAdditive: 0.0,
+        name: 'Shadowing',
+        startingStreakMultiplier: 1.5,
+        streakAdditive: 0.025,
         lastTimelog: [1, 1, 2000],
         daysOnStreak: 0,
         xp: 0,
-        conversionRate: 0.0,
-        startingXP: 0
+        conversionRate: 0.5,
+        startingXP: 30
     }]
+    localStorage.setItem('skills', JSON.stringify(skills))
 }
 
 function storeData() {
     localStorage.setItem('skills', JSON.stringify(skills));
 }
 
-// time logs = [monthIndex (January=0), date (day), year]
-function calculateStreakMultiplier(startingStreakMultiplier, streakAdditive, daysOnStreak, lastTimelog) {
+function wasLastTimelogTodayOrYesterday(lastTimelog) {
     var now = new Date()
     // p = present | l = last
     var pDay = now.getDate()
@@ -140,9 +141,15 @@ function calculateStreakMultiplier(startingStreakMultiplier, streakAdditive, day
         lastTimeY = true
     }
 
-    if(lastTimeY) {
+    return [lastTimeT, lastTimeY]
+}
+
+// time logs = [monthIndex (January=0), date (day), year]
+function calculateStreakMultiplier(startingStreakMultiplier, streakAdditive, daysOnStreak, lastTimelog) {
+    var lastTimeTodayOrYesterday = wasLastTimelogTodayOrYesterday(lastTimelog)
+    if(lastTimeTodayOrYesterday[1]) {
         return startingStreakMultiplier + (streakAdditive * (daysOnStreak - 1))
-    } else if (lastTimeT) {
+    } else if (lastTimeTodayOrYesterday[0]) {
         // If last time was today and daysOnStreak is 1, it means they didn't do it yesterday, so there's no streak multiplier
         if(daysOnStreak > 1) {
             return startingStreakMultiplier + (streakAdditive * (daysOnStreak - 2))
@@ -153,9 +160,9 @@ function calculateStreakMultiplier(startingStreakMultiplier, streakAdditive, day
 
 function nextLevelXP(currentLevel, startingXP) {
     if (currentLevel < 10) {
-        return startingXP * (1 + (currentLevel * .25 - .25))
+        return Math.ceil(startingXP * (1 + (currentLevel * .25 - .25)))
     }
-    return startingXP * (currentLevel + 1)
+    return Math.ceil(startingXP * (currentLevel + 1))
 }
 
 function getLevel(xp, startingXP) {
@@ -168,17 +175,28 @@ function getLevel(xp, startingXP) {
     return [level, remainingXP]
 }
 
-function addXP(newXP, skillName) {
+function changeXP(newXP, skillName) {
     var lookingForSkill = true
     var index = 0
     while(lookingForSkill) {
         let s = skills[index];
         if(s.name == skillName) {
             lookingForSkill = false
-            s.xp += newXP * calculateStreakMultiplier(s.startingStreakMultiplier, s.streakAdditive, s.daysOnStreak, s.lastTimelog)
+            let streakMultiplier = calculateStreakMultiplier(s.startingStreakMultiplier, s.streakAdditive, s.daysOnStreak, s.lastTimelog);
+            if(newXP < 0) {
+                if(newXP*-1 > s.xp) {
+                    s.xp = 0
+                } else { 
+                    s.xp += newXP
+                }
+            } else {
+                s.xp += newXP * streakMultiplier
+            }
+            if(wasLastTimelogTodayOrYesterday(s.lastTimelog)[1] || !(wasLastTimelogTodayOrYesterday(s.lastTimelog)[0] || wasLastTimelogTodayOrYesterday(s.lastTimelog)[0])) {
+                s.daysOnStreak++
+            }
             let now = new Date()
             s.lastTimelog = [now.getMonth(), now.getDate(), now.getFullYear()]
-            s.daysOnStreak++
         }
         index++
     }

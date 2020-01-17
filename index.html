@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <style>
+            @font-face {
+                font-family: 'pixel';
+                src: url('graph-35-pix.regular.ttf');
+            }
+            body {
+                margin: 0;
+                padding: 0;
+                padding-top: 10px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                min-height: 95vh;
+                color: rgb(230, 98, 109);
+                font-family: 'Roboto', Helvetica, sans-serif;
+            }
+            .skill {
+                display: block;
+            }
+            .skillrow {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                margin-bottom: 3px;
+                align-items: center;
+                font-size: 20px;
+            }
+            .skillrow > div {
+                display: flex;
+                align-items: stretch;
+            }
+            #container {
+                width: 70%;
+                margin: 0 auto;
+                box-shadow: 0 0 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+                border-radius: 20px;
+                padding: 20px;
+            }
+            .pBar {
+                margin-bottom: 10px;
+            }
+            span.lvl {
+              display: inline-block;
+              color: white;
+              background-color: rgb(230, 61, 75);
+              width: 50px;
+              padding: 1px;
+              border-radius: 4px;
+              text-align: center;
+              font-size: 16px;
+              margin-left: 10px;
+            }
+            i {
+                flex-grow: 1;
+            }
+            .PlusOrMin {
+                margin: 0;
+                border-width: 0;
+                background: rgb(230, 61, 75);
+                color: white;
+                font-weight: bolder;
+                box-sizing: border-box;
+                width: 20px;
+            }
+            .PlusOrMin:nth-child(1) {
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+                padding-left: 6px;
+            }
+            .PlusOrMin:nth-child(3) {
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                padding-top: 2px;
+            }
+            .xpMod {
+                margin: 0;
+                border: 2px solid rgb(230, 61, 75);
+                border-left: none;
+                border-right: none;
+                padding: 1px;
+                width: 50px;
+                text-align: center;
+                outline: none;
+            }
+            .xpMod::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            div.Header {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                margin-bottom: 3px;
+                align-items: flex-end;
+                font-size: 40px;
+            }
+            span.values {
+                display: inline-block;
+                width: 120px;
+                font-size: 14px;
+                text-align: center;
+                color: #555;
+            }
+            div#editName {
+                z-index: 10;
+                display: none;
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                width: 100vw;
+                background-color: rgba(69, 69, 69, 0.408);
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+            }
+            div#namePopUp {
+                background-color: white;
+                padding: 30px;
+                border-radius: 20px;
+            }
+            input#nameInput {
+                margin: 0;
+                border: none;
+                border-bottom: 2px solid rgb(230, 61, 75);
+                color: black;
+                font-size: 24px;
+                width: 300px;
+                outline: none;
+            }
+            button#changeName, button#cancelChangeName {
+                margin: 0;
+                border-width: 0;
+                background: rgb(230, 61, 75);
+                color: white;
+                box-sizing: border-box;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="editName">
+            <div id="namePopUp">
+                <input id="nameInput" placeholder="username"></input>
+                <button id="changeName">Edit</button>
+                <button id="cancelChangeName">Cancel</button>
+            </div>
+        </div>
+        <button id="startChangeUsername" style="
+            width: 80px;
+            position: absolute;
+            top: 0;
+            margin: 0;
+            border-width: 0;
+            background: rgb(230, 61, 75);
+            color: white;
+            box-sizing: border-box;
+            padding: 10px;
+        ">
+            Change
+            username
+        </button>
+        <div id="container">
+        </div>
+        <script src="Function.js"></script>
+        <script>
+            var username
+            if(localStorage.getItem('username')) {
+                username = localStorage.getItem('username')
+            } else {
+                username = "Cool Person"
+                localStorage.setItem('username', username)
+            }
+            document.getElementById("startChangeUsername").onclick = startEdit
+            document.getElementById("changeName").onclick = editUsername
+            document.getElementById("cancelChangeName").onclick = closeChangeName
+            function startEdit() {
+                document.getElementById("editName").style.display = "flex"
+            }
+            function closeChangeName() {
+                document.getElementById("editName").style.display = "none"
+                document.getElementById('nameInput').value = ""
+            }
+            function editUsername() {
+                username = document.getElementById('nameInput').value
+                localStorage.setItem('username', username)
+                render()
+                closeChangeName()
+            }
+            function change(skillName, type) {
+                if(document.getElementById(`xp-${skillName}`).value > 0) {
+                changeXP(parseFloat(document.getElementById(`xp-${skillName}`).value) * type ,skillName)
+                render()
+                storeData()
+                }
+            }
+            function render(){
+                document.getElementById("container").innerHTML = '<div id="name"></div>'
+                let mylevel = document.getElementById("name").children[0]
+                let UserXP = 0
+                skills.forEach(({ xp, startingXP, name, daysOnStreak, startingStreakMultiplier, lastTimelog, streakAdditive, conversionRate }, index) => {
+                    let skillDiv = document.createElement('div')
+                    skillDiv.className = "skill"
+                    // No duplicate skills
+                    if(!(wasLastTimelogTodayOrYesterday(lastTimelog)[0] || wasLastTimelogTodayOrYesterday(lastTimelog)[0])) {
+                        skills[index].daysOnStreak = 0;
+                        daysOnStreak = 0;
+                    }
+                    let lastDay = `${lastTimelog[0]}/${lastTimelog[1]}/${lastTimelog[2]}`
+                    if(lastDay == "1/1/2000") {
+                        lastDay = "N/A"
+                    }
+                    UserXP += xp * conversionRate
+                    skillDiv.innerHTML = `<div class="skillrow">${name}<span class="lvl">lvl ${getLevel(xp, startingXP)[0]}</span><i></i><span class="values">${lastDay}</span><span class="values">${daysOnStreak}</span><span class="values" style="color: rgb(230, 61, 75);">${calculateStreakMultiplier(startingStreakMultiplier, streakAdditive, daysOnStreak, lastTimelog)}</span> <div style="width: 120px; text-align: right;"><button id="neg${name}" class="PlusOrMin">–</button><input type="number" id="xp-${name}" class="xpMod"></input><button class="PlusOrMin" id="pos${name}">+</button></div></div>`
+                    skillDiv.innerHTML = skillDiv.innerHTML + `<div class="pBar" style="position: relative; width: 100%; color: black; text-align: center; height: 14px; border: 1px solid black; box-sizing: border-box"><div id="progressBar-${name}" style="position: absolute; top: -1px; left: -1px; z-index: -1; height: 14px;"></div><p style="color: black; margin: 0; position: relative; font-family: pixel, sans-serif; color: black; top: 1px; font-size: 12px;">${Math.round(getLevel(xp, startingXP)[1] * 100)/100}/${nextLevelXP(getLevel(xp, startingXP)[0], startingXP)}</p></div>`
+                    document.getElementById("container").appendChild(skillDiv)
+                    document.getElementById(`progressBar-${name}`).style.backgroundColor = "rgb(230, 98, 109)";
+                    document.getElementById(`progressBar-${name}`).style.width = `${getLevel(xp, startingXP)[1]/nextLevelXP(getLevel(xp, startingXP)[0], startingXP)*100}%`;
+                    document.getElementById(`neg${name}`).onclick = () => change(name, -1)
+                    document.getElementById(`pos${name}`).onclick = () => change(name, 1)
+                })
+                document.getElementById("name").innerHTML = `<div class="Header">${username} <span style="transform: scale(1.4); align-self: center; position: relative; left: 10px;" class="lvl">lvl ${getLevel(UserXP, 300)[0]}</span><i></i><span class="values">Last Day</span><span class="values">Streak Days</span><span class="values">Streak Modifier</span><span class="values"></span></div>`
+            }
+            render()
+        </script>
+    </body>
+</html>
