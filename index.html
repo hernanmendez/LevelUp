@@ -206,7 +206,7 @@
                     let skillDiv = document.createElement('div')
                     skillDiv.className = "skill"
                     // No duplicate skills
-                    if(!(wasLastTimelogTodayOrYesterday(lastTimelog)[0] || wasLastTimelogTodayOrYesterday(lastTimelog)[0])) {
+                    if(!(wasLastTimelogTodayOrYesterday(lastTimelog)[0] || wasLastTimelogTodayOrYesterday(lastTimelog)[1])) {
                         skills[index].daysOnStreak = 0;
                         daysOnStreak = 0;
                     }
